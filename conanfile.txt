@@ -1,0 +1,16 @@
+[requires]
+# You may have multiple lines like the one below, if you have many dependencies.
+gtk/system
+
+[generators]
+CMakeToolchain,
+
+cmake_minimum_required(VERSION $version)  # Specifies the required CMake version.
+project($project_name)  # Defines the project name.
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)  # Includes the contents of the conanbuildinfo.cmake file.
+conan_basic_setup()  # Prepares the CMakeList.txt for Conan.
+
+# $source_files is a space-delimited list of filenames.
+add_executable($executable_name $source_files)  # Specifies the executable to build.
+target_link_libraries($executable_name ${CONAN_LIBS})
