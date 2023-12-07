@@ -1,25 +1,41 @@
 #include "noteapp.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main() {
   struct LinkedList *list = retrieve_data_from_file();
-  // list= add_at_beginning(list, "Head");
-  // list= add_at_end(list, "Taily");
-  // list= add_at_index(list, "Index", 1);
-  // list = delete_at_beginning(list);
   struct node *current = list->head;
   if (current == NULL) {
     printf("List is empty\n");
     return 0;
   }
-  char *quit = "quit";
-while (current != NULL) {
-    printf("%s\n", current->data);
-    current = current->next;
-}
 
-  // save_data_to_file(list);
+  // infinite loop until user exits
+  char *input = malloc(sizeof(char));
+  int i = 0;
+  // add strings for functions like reverse, delete, etc
+  char *reverse = "reverse";
+  char *delete = "delete";
+  char *add = "add";
+  char *print = "print";
+
+  while (1) {
+    input = realloc(input, sizeof(char) * (i + 1));
+    input[i] = getchar();
+    i++;
+    if (input[i] == '\n') {
+        if (strcmp(input, reverse) == 0) {
+
+        list = add_at_end(list, input);
+      }
+      break;
+    }
+  }
+  for (int i = 0; i < list->size; i++) {
+    print_at_index(list, i);
+  }
+  save_data_to_file(list);
 
   return 0;
 }
@@ -178,7 +194,7 @@ struct LinkedList *retrieve_data_from_file() {
 void save_data_to_file(struct LinkedList *list) {
   // write to file
   FILE *fp;
-  fp = fopen("data.txt", "w");
+  fp = fopen("out/data.txt", "w");
   // erase previous data
   fprintf(fp, "%s", "");
   fprintf(fp, "%d\n", list->size);
