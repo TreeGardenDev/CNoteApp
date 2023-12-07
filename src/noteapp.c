@@ -1,6 +1,6 @@
+#include "noteapp.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "noteapp.h"
 
 int main() {
   struct LinkedList *list = retrieve_data_from_file();
@@ -8,8 +8,17 @@ int main() {
   // list= add_at_end(list, "Taily");
   // list= add_at_index(list, "Index", 1);
   // list = delete_at_beginning(list);
+  struct node *current = list->head;
+  if (current == NULL) {
+    printf("List is empty\n");
+    return 0;
+  }
+  char *quit = "quit";
+while (current != NULL) {
+    printf("%s\n", current->data);
+    current = current->next;
+}
 
-  print(list);
   // save_data_to_file(list);
 
   return 0;
@@ -114,55 +123,43 @@ struct LinkedList *delete_at_beginning(struct LinkedList *list) {
 }
 
 struct LinkedList *retrieve_data_from_file() {
-  // read from file
-  printf("Reading from file...\n");
   FILE *fp;
   char c;
   int count = 0;
   fp = fopen("out/data.txt", "r");
 
-  printf("File opened\n");
-  printf("Counting lines...\n");
   if (fp == NULL) {
     printf("Could not open file data.txt");
     return 0;
   }
 
-  char *data[] = {};
-  char *line = NULL;
+  char **data = malloc(sizeof(char *));
+  char *line = malloc(sizeof(char));
+  int i = 0;
 
   for (c = getc(fp); c != EOF; c = getc(fp)) {
+    line = realloc(line, sizeof(char) * (i + 1));
 
-    printf("%c", c);
-    if (count > 0 && c != '\n'){
-      line[count] = c;
+    if (count > 0 && c != '\n') {
+      line[i] = c;
+      i++;
     }
     if (c == '\n') { // Increment count if this character is newline
-      //*data = realloc(data, sizeof(data) + sizeof(line));
-        if (count > 0){
-          line[count] = '\0';
-          data[count] = line;
-          count = count + 1;
-        }
-      //data[count] = line;
-      count = count + 1;
+      if (count > 0) {
+        i = 0;
+        data = realloc(data, sizeof(char *) * (count + 1));
+        data[count] = line;
+        line = malloc(sizeof(char));
+      }
+      count++;
     }
   }
+
   fclose(fp);
-  printf("Done counting lines\n");
-  for (int i = 0; i < count; i++) {
-
-    printf("%s\n", data[i]);
-  }
-  printf("%d\n", count);
-
   struct LinkedList *list = createLinkedList();
-
   for (int i = 1; i < count; i++) {
-    char *data;
-    fscanf(fp, "%s", data);
-    // add to linked list
-    struct node *newNode = createNode(data);
+
+    struct node *newNode = createNode(data[i]);
     if (list->head == NULL) {
       list->head = newNode;
       list->tail = newNode;
@@ -175,6 +172,7 @@ struct LinkedList *retrieve_data_from_file() {
       list->size++;
     }
   }
+
   return list;
 }
 void save_data_to_file(struct LinkedList *list) {
@@ -190,5 +188,3 @@ void save_data_to_file(struct LinkedList *list) {
     current = current->next;
   }
 }
-
-
