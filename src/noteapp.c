@@ -1,7 +1,6 @@
 #include "noteapp.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int main() {
   struct LinkedList *list = retrieve_data_from_file();
@@ -11,31 +10,27 @@ int main() {
     return 0;
   }
 
-  // infinite loop until user exits
-  char *input = malloc(sizeof(char));
-  int i = 0;
-  // add strings for functions like reverse, delete, etc
-  char *reverse = "reverse";
-  char *delete = "delete";
-  char *add = "add";
-  char *print = "print";
-
-  while (1) {
-    input = realloc(input, sizeof(char) * (i + 1));
-    input[i] = getchar();
-    i++;
-    if (input[i] == '\n') {
-        if (strcmp(input, reverse) == 0) {
-
-        list = add_at_end(list, input);
-      }
-      break;
+//infinite loop until user exits
+    char *input = malloc(sizeof(char));
+    int i = 0;
+        //add strings for functions like reverse, delete, etc
+        char *reverse = "reverse";
+        char *delete = "delete";
+        char *add = "add";
+        char *print = "print";
+    while(1){
+        input = realloc(input, sizeof(char) * (i + 1));
+        input[i] = getchar();
+        i++;
+        if (input[i] == '\n'){
+            list = add_at_end(list, input);
+            break;
+        }
     }
-  }
-  for (int i = 0; i < list->size; i++) {
-    print_at_index(list, i);
-  }
-  save_data_to_file(list);
+    for (int i = 0; i < list->size; i++) {
+      print_at_index(list, i);
+    }
+   save_data_to_file(list);
 
   return 0;
 }
