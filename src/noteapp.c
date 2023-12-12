@@ -1,15 +1,17 @@
 #include "noteapp.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int main() {
   struct LinkedList *list = retrieve_data_from_file();
-  struct node *current = list->head;
-  if (current == NULL) {
-    printf("List is empty\n");
-    return 0;
+  if (list == NULL) {
+    list = createLinkedList();
   }
+  printf("Current size of list: %d\n", list->size);
+  // struct node *current = list->head;
+  // if (current == NULL) {
+  //   printf("List is empty\n");
+  // }
 
   // infinite loop until user exits
   char *input = malloc(sizeof(char));
@@ -19,22 +21,20 @@ int main() {
   char *delete = "delete";
   char *add = "add";
   char *print = "print";
-
   while (1) {
     input = realloc(input, sizeof(char) * (i + 1));
     input[i] = getchar();
     i++;
     if (input[i] == '\n') {
-        if (strcmp(input, reverse) == 0) {
-
-        list = add_at_end(list, input);
-      }
+      list = add_at_end(list, input);
       break;
     }
   }
   for (int i = 0; i < list->size; i++) {
     print_at_index(list, i);
   }
+  printf("Size");
+  printf("%d\n", list->size);
   save_data_to_file(list);
 
   return 0;
@@ -49,6 +49,7 @@ struct node *createNode(char *data) {
 
 struct LinkedList *createLinkedList() {
   struct LinkedList *list = malloc(sizeof(struct LinkedList));
+
   list->head = NULL;
   list->tail = NULL;
   list->size = 0;
@@ -57,6 +58,14 @@ struct LinkedList *createLinkedList() {
 struct LinkedList *add_at_end(struct LinkedList *list, char *data) {
   struct node *newNode = createNode(data);
   struct node *tail = list->tail;
+
+  int l = list->size;
+  if (tail == NULL) {
+    list->head = newNode;
+    list->tail = newNode;
+    list->size++;
+    return list;
+  }
   tail->next = newNode;
   list->tail = newNode;
   newNode->prev = tail;
@@ -99,14 +108,14 @@ struct LinkedList *add_at_index(struct LinkedList *list, char *data,
 void print_reverse(struct LinkedList *list) {
   struct node *current = list->tail;
   while (current != NULL) {
-    printf("%d\n", current->data);
+    printf("%s\n", current->data);
     current = current->prev;
   }
 }
 void print(struct LinkedList *list) {
   struct node *current = list->head;
   while (current != NULL) {
-    printf("%d\n", current->data);
+    printf("%s\n", current->data);
     current = current->next;
   }
 }
@@ -145,7 +154,7 @@ struct LinkedList *retrieve_data_from_file() {
   fp = fopen("out/data.txt", "r");
 
   if (fp == NULL) {
-    printf("Could not open file data.txt");
+    printf("Could not open file data.txt\n");
     return 0;
   }
 
@@ -161,12 +170,10 @@ struct LinkedList *retrieve_data_from_file() {
       i++;
     }
     if (c == '\n') { // Increment count if this character is newline
-      if (count > 0) {
         i = 0;
         data = realloc(data, sizeof(char *) * (count + 1));
         data[count] = line;
         line = malloc(sizeof(char));
-      }
       count++;
     }
   }
@@ -197,7 +204,7 @@ void save_data_to_file(struct LinkedList *list) {
   fp = fopen("out/data.txt", "w");
   // erase previous data
   fprintf(fp, "%s", "");
-  fprintf(fp, "%d\n", list->size);
+  //fprintf(fp, "%d\n", list->size);
   struct node *current = list->head;
   while (current != NULL) {
     fprintf(fp, "%s\n", current->data);
