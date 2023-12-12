@@ -7,10 +7,11 @@ int main() {
   if (list == NULL) {
     list = createLinkedList();
   }
-  //struct node *current = list->head;
-  //if (current == NULL) {
-  //  printf("List is empty\n");
-  //}
+  printf("Current size of list: %d\n", list->size);
+  // struct node *current = list->head;
+  // if (current == NULL) {
+  //   printf("List is empty\n");
+  // }
 
   // infinite loop until user exits
   char *input = malloc(sizeof(char));
@@ -32,6 +33,8 @@ int main() {
   for (int i = 0; i < list->size; i++) {
     print_at_index(list, i);
   }
+  printf("Size");
+  printf("%d\n", list->size);
   save_data_to_file(list);
 
   return 0;
@@ -55,6 +58,8 @@ struct LinkedList *createLinkedList() {
 struct LinkedList *add_at_end(struct LinkedList *list, char *data) {
   struct node *newNode = createNode(data);
   struct node *tail = list->tail;
+
+  int l = list->size;
   if (tail == NULL) {
     list->head = newNode;
     list->tail = newNode;
@@ -149,7 +154,7 @@ struct LinkedList *retrieve_data_from_file() {
   fp = fopen("out/data.txt", "r");
 
   if (fp == NULL) {
-    printf("Could not open file data.txt");
+    printf("Could not open file data.txt\n");
     return 0;
   }
 
@@ -165,12 +170,10 @@ struct LinkedList *retrieve_data_from_file() {
       i++;
     }
     if (c == '\n') { // Increment count if this character is newline
-      if (count > 0) {
         i = 0;
         data = realloc(data, sizeof(char *) * (count + 1));
         data[count] = line;
         line = malloc(sizeof(char));
-      }
       count++;
     }
   }
@@ -201,7 +204,7 @@ void save_data_to_file(struct LinkedList *list) {
   fp = fopen("out/data.txt", "w");
   // erase previous data
   fprintf(fp, "%s", "");
-  fprintf(fp, "%d\n", list->size);
+  //fprintf(fp, "%d\n", list->size);
   struct node *current = list->head;
   while (current != NULL) {
     fprintf(fp, "%s\n", current->data);
